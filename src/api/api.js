@@ -16,6 +16,7 @@
 //    console.log("tk catch err ", error);
 // }
 
+//per country
 export async function fetchCountryData(country) {
    try {
       const covid_resp = await fetch(`https://api-corona.azurewebsites.net/country/${country}`);
@@ -24,5 +25,18 @@ export async function fetchCountryData(country) {
 
    } catch (error) {
       console.log("tk error when fetching country data", error);
+   }
+}
+
+//daily
+export async function fetchWeeklyData(country) {
+   try {
+      const weekly_resp = await fetch(`https://corona.lmao.ninja/v2/historical/${country}?lastdays=7`);
+      const weekly_data = await weekly_resp.json()
+      console.log("tk weekly data", weekly_data)
+      return weekly_data;
+
+   } catch (error) {
+      console.log("tk error when fetching weekly data", error);
    }
 }

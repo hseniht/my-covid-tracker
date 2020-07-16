@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import CountUp from 'react-countup';
 
 
 const Cards = (props) => {
@@ -40,30 +41,47 @@ const useStyles = makeStyles((theme) => ({
 
 const CardInfo = ({ icon, text, digits }) => {
    return (
+      digits >= 0 ?
       <Grid container wrap="nowrap" spacing={2}>
          {icon &&
             <Grid item><Avatar>{icon}</Avatar></Grid>
          }
          <Grid item xs align='left'>
             <Typography variant="caption">{text}</Typography>
-            <Typography variant="h6">{digits}</Typography>
+            <Typography variant="h6">
+               <CountUp
+                  start={0}
+                  end={digits}
+                  duration={1.5}
+               />
+            </Typography>
          </Grid>
-      </Grid>
+      </Grid> : null
    )
 }
 
-const StatsPage = ({data, classes}) => {
-   const { Active
-      , Code
-      , Confirmed
-      , Country_Region
-      , Deaths
-      , Last_Update
-      , NewConfirmed
-      , NewDeaths
-      , NewRecovered
-      , Recovered
-   } = data;
+const StatsPage = ({ data: { Active
+   , Code
+   , Confirmed
+   , Country_Region
+   , Deaths
+   , Last_Update
+   , NewConfirmed
+   , NewDeaths
+   , NewRecovered
+   , Recovered }
+   , classes }) => {
+   // const { Active
+   //    , Code
+   //    , Confirmed
+   //    , Country_Region
+   //    , Deaths
+   //    , Last_Update
+   //    , NewConfirmed
+   //    , NewDeaths
+   //    , NewRecovered
+   //    , Recovered
+   // } = data;
    return (
       <Grid container spacing={3} className="stats-container">
          <Grid item xs={4}>
@@ -111,10 +129,12 @@ const StatsPage = ({data, classes}) => {
          </Grid>
          <Grid item xs={6}>
             <Paper className={classes.paper}>
-               <CardInfo
-                  text={"Last updated"}
-                  digits={new Date(Last_Update).toDateString()}
-               />
+               <Grid container wrap="nowrap" spacing={2}>
+                  <Grid item xs align='left'>
+                     <Typography variant="caption">{"Last Updated"}</Typography>
+                     <Typography variant="h6">{new Date(Last_Update).toDateString()}</Typography>
+                  </Grid>
+               </Grid>
             </Paper>
          </Grid>
       </Grid>
@@ -122,19 +142,7 @@ const StatsPage = ({data, classes}) => {
 }
 
 export const TabContent = ({ country, data, onHandleChange, onHandleClick }) => {
-   // { country, confirmed, deaths, lastUpdate, newConfirmed, newDeaths, newRecovered, recovered, onHandleChange, onHandleClick 
    const classes = useStyles();
-   // const { Active
-   //    , Code
-   //    , Confirmed
-   //    , Country_Region
-   //    , Deaths
-   //    , Last_Update
-   //    , NewConfirmed
-   //    , NewDeaths
-   //    , NewRecovered
-   //    , Recovered
-   // } = data;
    return (
       <Grid container spacing={3}>
          <Grid item xs={12}>
@@ -150,7 +158,7 @@ export const TabContent = ({ country, data, onHandleChange, onHandleClick }) => 
             </Button>
          </Grid>
          {!data ? <div>Loading...</div> :
-            <StatsPage data={data} classes={classes}/>
+            <StatsPage data={data} classes={classes} />
          }
       </Grid>
    )
