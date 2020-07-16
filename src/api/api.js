@@ -29,11 +29,16 @@ export async function fetchCountryData(country) {
 }
 
 //daily
-export async function fetchWeeklyData(country) {
+export async function fetchWeeklyData(country, day) {
    try {
-      const weekly_resp = await fetch(`https://corona.lmao.ninja/v2/historical/${country}?lastdays=7`);
+      const weekly_resp = await fetch(`https://corona.lmao.ninja/v2/historical/${country}?lastdays=${day}`);
       const weekly_data = await weekly_resp.json()
-      console.log("tk weekly data", weekly_data)
+      console.log("tks weekly data response", weekly_resp.ok)
+      console.log("tks weekly data", weekly_data)
+      if (!weekly_resp.ok) {
+         console.log("tk weatherResp:", weekly_resp.statusText); //"statusText" available when on fetch request
+         return {};
+      }
       return weekly_data;
 
    } catch (error) {

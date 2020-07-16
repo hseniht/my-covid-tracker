@@ -2,12 +2,19 @@ import React, { Component, useState, useEffect } from 'react'
 import { fetchWeeklyData } from '../../api/api'
 import { Bar, Line, Pie } from 'react-chartjs-2'
 
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
 class Chart extends Component {
    state = {
       data: {
          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
          datasets: [{
-            label: '# of Votes',
+            label: '# of Count',
             data: [12, 19, 3, 5, 2, 3],
             backgroundColor: [
                'rgba(255, 99, 132, 0.2)',
@@ -45,26 +52,40 @@ class Chart extends Component {
 
 export default Chart;
 
+const useStyles = makeStyles((theme) => ({
+   formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+   },
+   selectEmpty: {
+      marginTop: theme.spacing(2),
+   },
+}));
+
 export const WeeklyChart = (props) => {
    const [weeklyData, setWeeklyData] = useState({});
+   const [inputDay, setInputDay] = useState(16);
+
+   const classes = useStyles();
+   // const [age, setAge] = React.useState('');
+
+   const handleChange = (event) => {
+      setInputDay(event.target.value);
+   };
 
    useEffect(() => {
       //create an async function to handle fetchWeeklyData
       const fetchAPI = async () => {
-         setWeeklyData(await fetchWeeklyData("my"));
+         setWeeklyData(await fetchWeeklyData(props.country, inputDay));
       }
-      if(props.country){
+      if (props.country) {
          fetchAPI();
       }
-      console.log("tkk weekly data at chart", weeklyData);
-      console.log("tkk weekly casse", weeklyData.timeline);
-   }, [weeklyData.country]);
-
-   // let labelsWeek = weeklyData.timeline.cases;
-   console.log("tk week Labels cases ", weeklyData);
+      // console.log("tkk weekly data at chart", weeklyData);
+      // console.log("tkk weekly casse", weeklyData.timeline);
+   }, [props.country, inputDay]);
 
    let fetchedData = Object.entries(weeklyData), itsValid = false;
-   console.log("tk fetched data? ", fetchedData);
 
    if (fetchedData.length > 0) {
       console.log("tk week Labels timeline ran ", weeklyData.timeline);
@@ -119,13 +140,34 @@ export const WeeklyChart = (props) => {
             options={{
                title: {
                   display: true,
-                  text: 'Weekly case'
+                  text: `Last ${inputDay} day for ${weeklyData.country}`
                }
             }}
          />) : <div>Loading chart... </div>
    )
    return (
-      <div className="chart">
+      <div className="chart-weekly">
+         <FormControl className={classes.formControl}>
+            <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+               Last
+         </InputLabel>
+            <Select
+               labelId="demo-simple-select-placeholder-label-label"
+               id="demo-simple-select-placeholder-label"
+               value={inputDay}
+               onChange={handleChange}
+               displayEmpty
+               className={classes.selectEmpty}
+            >
+               <MenuItem value="" disabled>
+                  <em>None</em>
+               </MenuItem>
+               <MenuItem value={7}>7 days</MenuItem>
+               <MenuItem value={14}>14 days</MenuItem>
+               <MenuItem value={21}>21 days</MenuItem>
+               <MenuItem value={28}>28 days</MenuItem>
+            </Select>
+         </FormControl>
          {renderChart}
       </div>
    )

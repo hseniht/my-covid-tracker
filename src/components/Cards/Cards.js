@@ -145,7 +145,7 @@ export const TabContent = ({ country, data, onHandleChange, onHandleClick }) => 
    const classes = useStyles();
    return (
       <Grid container spacing={3}>
-         <Grid item xs={12}>
+         {/* <Grid item xs={12}>
             <TextField
                id={country}
                label="Country"
@@ -156,7 +156,7 @@ export const TabContent = ({ country, data, onHandleChange, onHandleClick }) => 
             <Button variant="contained" color="primary" onClick={onHandleClick}>
                Search
             </Button>
-         </Grid>
+         </Grid> */}
          {!data ? <div>Loading...</div> :
             <StatsPage data={data} classes={classes} />
          }
