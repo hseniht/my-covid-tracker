@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import Cards, { TabContent } from './components/Cards/Cards'
-import Chart, { WeeklyChart } from './components/Charts/Charts'
+import DailyContent from './components/Layout/DailyContent'
+import SampleChart from './components/Charts/Charts'
 
-import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -10,19 +9,17 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+
 
 import { fetchCountryData } from './api/api'
+import WeeklyContent from './components/Layout/WeeklyContent';
 
 function TabPanel(props) {
-   const { children, value, index, ...other } = props;
-
+   const { children, value, index } = props;
    return (
       <div className="tab-body">
          {value === index && (
-            <Box p={3}> {/*padding? */}
-               {/* <Typography>
-               </Typography> */}
+            <Box p={3}>
                {children}
             </Box>
          )}
@@ -48,8 +45,8 @@ export default class App extends Component {
    async componentDidUpdate(prevProps, prevState) {
       if (this.state.newCountry !== prevState.newCountry) {
          const fetchedData = await fetchCountryData(this.state.newCountry);
-         console.log("tkk comp Did update ran pre", prevState.newCountry);
-         console.log("tkk comp Did update ran curr", this.state.newCountry);
+         // console.log("tkk comp Did update ran pre", prevState.newCountry);
+         // console.log("tkk comp Did update ran curr", this.state.newCountry);
          if (fetchedData) {
             this.setState({ data: fetchedData.Summary });
          }
@@ -73,7 +70,9 @@ export default class App extends Component {
    render() {
       return (
          <div className="container">
-            <h1>MY Covid Tracker</h1>
+            <Typography component="div">
+               <Box fontSize="h2.fontSize" fontWeight="fontWeightMedium" m={1}>MY Covid Tracker</Box>
+            </Typography>
             <Box m={2} xs={12}>
                <TextField
                   id={this.state.country}
@@ -86,6 +85,7 @@ export default class App extends Component {
                   Search
                </Button>
             </Box>
+            {/*Tab Box Component */}
             <AppBar position="static">
                <Tabs value={this.state.value} onChange={this.onSelectTabs} aria-label="simple tabs example">
                   <Tab label="Latest" />
@@ -94,21 +94,14 @@ export default class App extends Component {
                </Tabs>
             </AppBar>
             <TabPanel value={this.state.value} index={0}>
-               {/* {!this.state.data ? <div>Loading...</div> : */}
-               <TabContent
-                  data={this.state.data}
-                  //remove later
-                  country={this.state.country}
-                  onHandleChange={this.handleChange}
-                  onHandleClick={this.handleSearch}
-               />
+               <DailyContent data={this.state.data} />
             </TabPanel>
             <TabPanel value={this.state.value} index={1}>
-               {/* {NewRecovered} */}
-               <WeeklyChart country={this.state.newCountry} />
+               {/* <WeeklyChart country={this.state.newCountry} /> */}
+               <WeeklyContent country={this.state.newCountry} />
             </TabPanel>
             <TabPanel value={this.state.value} index={2}>
-               <Chart data={this.state} />
+               <SampleChart data={this.state} />
             </TabPanel>
          </div>
       )

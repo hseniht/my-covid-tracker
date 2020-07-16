@@ -4,20 +4,21 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+// import TextField from '@material-ui/core/TextField';
+// import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import CountUp from 'react-countup';
+import { green, pink, red, blue } from '@material-ui/core/colors';
 
 
-const Cards = (props) => {
-   console.log("tk fetched data", props);
-   return (
-      <h1>Cards</h1>
-   )
-}
+// const Cards = (props) => {
+//    console.log("tk fetched data", props);
+//    return (
+//       <h1>Cards</h1>
+//    )
+// }
 
-export default Cards;
+// export default Cards;
 
 const useStyles = makeStyles((theme) => ({
    container: {
@@ -36,31 +37,53 @@ const useStyles = makeStyles((theme) => ({
    divider: {
       margin: theme.spacing(2, 0),
    },
+   root: {
+      display: 'flex',
+      '& > *': {
+         margin: theme.spacing(1),
+      },
+   },
+   pink: {
+      color: theme.palette.getContrastText(pink[500]),
+      backgroundColor: pink[500],
+   },
+   green: {
+      color: '#fff',
+      backgroundColor: green[200],
+   },
+   red: {
+      color: '#fff',
+      backgroundColor: red[200],
+   },
+   blue: {
+      color: '#fff',
+      backgroundColor: blue[200],
+   }
 }));
 
 
-const CardInfo = ({ icon, text, digits }) => {
+const CardInfo = ({ icon, iconClass, text, digits }) => {
    return (
       digits >= 0 ?
-      <Grid container wrap="nowrap" spacing={2}>
-         {icon &&
-            <Grid item><Avatar>{icon}</Avatar></Grid>
-         }
-         <Grid item xs align='left'>
-            <Typography variant="caption">{text}</Typography>
-            <Typography variant="h6">
-               <CountUp
-                  start={0}
-                  end={digits}
-                  duration={1.5}
-               />
-            </Typography>
-         </Grid>
-      </Grid> : null
+         <Grid container wrap="nowrap" spacing={2}>
+            {icon &&
+               <Grid item><Avatar className={iconClass}>{icon}</Avatar></Grid>
+            }
+            <Grid item xs align='left'>
+               <Typography variant="caption">{text}</Typography>
+               <Typography variant="h6">
+                  <CountUp
+                     start={0}
+                     end={digits}
+                     duration={1.5}
+                  />
+               </Typography>
+            </Grid>
+         </Grid> : null
    )
 }
 
-const StatsPage = ({ data: { Active
+const Statistics = ({ data: { Active
    , Code
    , Confirmed
    , Country_Region
@@ -84,10 +107,14 @@ const StatsPage = ({ data: { Active
    // } = data;
    return (
       <Grid container spacing={3} className="stats-container">
+         {/* <Grid item xs=12>
+
+         </Grid> */}
          <Grid item xs={4}>
             <Paper className={classes.paper}>
                <CardInfo
                   icon="C"
+                  iconClass={classes.blue}
                   text={"Confirmed"}
                   digits={NewConfirmed}
                />
@@ -97,6 +124,7 @@ const StatsPage = ({ data: { Active
             <Paper className={classes.paper}>
                <CardInfo
                   icon="R"
+                  iconClass={classes.green}
                   text={"Recovered"}
                   digits={NewRecovered}
                />
@@ -106,6 +134,7 @@ const StatsPage = ({ data: { Active
             <Paper className={classes.paper}>
                <CardInfo
                   icon="D"
+                  iconClass={classes.red}
                   text={"Death"}
                   digits={NewDeaths}
                />
@@ -141,25 +170,24 @@ const StatsPage = ({ data: { Active
    )
 }
 
-export const TabContent = ({ country, data, onHandleChange, onHandleClick }) => {
+const DailyContent = ({ country, data, onHandleChange, onHandleClick }) => {
    const classes = useStyles();
    return (
       <Grid container spacing={3}>
-         {/* <Grid item xs={12}>
-            <TextField
-               id={country}
-               label="Country"
-               defaultValue={country}
-               helperText={"e.g. \"Malaysia\", \"MY\", \"my\" "}
-               onChange={onHandleChange}
-            />
-            <Button variant="contained" color="primary" onClick={onHandleClick}>
-               Search
-            </Button>
-         </Grid> */}
+         <Typography component="div">
+            <Box fontSize="h5.fontSize" fontWeight="fontWeightMedium" m={1}>Daily Reported Stats</Box>
+         </Typography>
+         {/* <Grid container wrap="nowrap" spacing={2}>
+            <Grid item xs align='left'>
+               <Typography variant="h6">{"Last Updated"}</Typography>
+               <Typography variant="caption">{"test"}</Typography>
+            </Grid>
+            </Grid> */}
          {!data ? <div>Loading...</div> :
-            <StatsPage data={data} classes={classes} />
+            <Statistics data={data} classes={classes} />
          }
       </Grid>
    )
-} 
+}
+
+export default DailyContent;
